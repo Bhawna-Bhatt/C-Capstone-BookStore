@@ -52,9 +52,9 @@ namespace BookStore.Services
             throw new NotImplementedException();
         }
 
-        public Task<Author?> GetAuthorAsync(int authorId)
+        public async Task<Author?> GetAuthorAsync(int authorId)
         {
-            throw new NotImplementedException();
+            return await _context.Authors.Where(c => c.AuthorId == authorId).FirstOrDefaultAsync();
         }
 
         public Task<Author?> GetAuthorForBookAsync(int bookId, int authorId)
@@ -71,6 +71,8 @@ namespace BookStore.Services
         {
             return await _context.Books
                 .Where(c => c.BookId == bookId).FirstOrDefaultAsync();
+
+
         }
 
         public async Task<IEnumerable<Book>> GetBooksAsync()
@@ -78,9 +80,9 @@ namespace BookStore.Services
            return await _context.Books.OrderBy(b=>b.Title).ToListAsync();
         }
 
-        public async Task<IEnumerable<Genre>> GetGenreAsync(int genreId)
+        public async Task<Genre?> GetGenreAsync(int genreId)
         {
-            return await _context.Genres.OrderBy(g=>g.GenreName).ToListAsync();
+            return await _context.Genres.Where(c => c.GenreId == genreId).FirstOrDefaultAsync();
         }
 
         public Task<Genre?> GetGenreForBookAsync(int bookId, int genreId)
@@ -113,9 +115,6 @@ namespace BookStore.Services
             throw new NotImplementedException();
         }
 
-        Task<Genre?> IBookstoreRepository.GetGenreAsync(int genreId)
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }

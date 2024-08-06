@@ -1,4 +1,5 @@
-﻿using BookStore.Models;
+﻿using AutoMapper;
+using BookStore.Models;
 using BookStore.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,9 +12,11 @@ namespace BookStore.Controllers
     {
 
         private readonly IBookstoreRepository _bookstoreRepository;
-        public AuthorsController(IBookstoreRepository bookStoreRepository)
+        private readonly IMapper _mapper;
+        public AuthorsController(IBookstoreRepository bookStoreRepository, IMapper mapper)
         {
             _bookstoreRepository = bookStoreRepository ?? throw new ArgumentNullException(nameof(bookStoreRepository));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         [HttpGet]
@@ -24,25 +27,28 @@ namespace BookStore.Controllers
             //var genres = GenreDataStore.Current.Genres;
             var authorEntities = await _bookstoreRepository.GetAuthorsAsync();
 
-            var results = new List<AuthorDto>();
-            foreach (var author in authorEntities)
-            {
-                results.Add(new AuthorDto
-                {
-                   AuthorId = author.AuthorId,
-                   Name = author.Name,
-                   Biography = author.Biography
-
-                });
-            }
+            return Ok(_mapper.Map<IEnumerable<AuthorDto>>(authorEntities));
 
 
-            return Ok(results);
         }
 
 
 
-        // [HttpGet("/")]
+        [HttpGet("{id}", Name = "GetAuthor")]
+
+        public async Task<ActionResult<AuthorDto>> GetAuthor(int id)
+        {
+            //var genreToReturn = GenreDataStore.Current.Genres.FirstOrDefault(c => c.GenreId == id);
+
+            var author = await _bookstoreRepository.GetAuthorAsync(id);
+
+            if (author == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(_mapper.Map<AuthorDto>(author));
+        }
         //[HttpPost]
         //[HttpPut]
         //[HttpDelete]

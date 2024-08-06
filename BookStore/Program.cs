@@ -22,12 +22,17 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// for dbcontext
 
 builder.Services.AddDbContext<BookStoreContext>(dbContextOptions
     => dbContextOptions.UseSqlServer(builder.Configuration["ConnectionStrings:BookStoreDbConnectionString"]));
-
+// for repositiry 
 
 builder.Services.AddScoped<IBookstoreRepository, BookStoreRepository>();
+
+// for automapper 
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 

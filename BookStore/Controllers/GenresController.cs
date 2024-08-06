@@ -1,4 +1,5 @@
-﻿using BookStore.Models;
+﻿using AutoMapper;
+using BookStore.Models;
 using BookStore.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,10 +14,14 @@ namespace BookStore.Controllers
 
            // private readonly ILogger<GenresController> _logger;
            private readonly IBookstoreRepository _bookstoreRepository;
-            
-            public GenresController(IBookstoreRepository bookStoreRepository)
+            private readonly IMapper _mapper;
+
+        public GenresController(IBookstoreRepository bookStoreRepository,
+                IMapper mapper)
         {
            _bookstoreRepository = bookStoreRepository ?? throw new ArgumentNullException(nameof(bookStoreRepository));
+
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
    
       
@@ -28,33 +33,25 @@ namespace BookStore.Controllers
             //var genres = GenreDataStore.Current.Genres;
             var genreEntities = await _bookstoreRepository.GetGenresAsync();
 
-            var results = new List<GenreDto>();
-            foreach (var genre in genreEntities)
-            {
-                results.Add(new GenreDto
-                {
-                    GenreId = genre.GenreId,
-                    GenreName = genre.GenreName
-                });
-            }
-        
 
-            return Ok(results);
+            return Ok(_mapper.Map<IEnumerable<GenreDto>>(genreEntities));
             }
 
 
         [HttpGet("{id}", Name ="GetGenre")]
 
-        public ActionResult<GenreDto> GetGenre(int id)
+        public async Task<ActionResult<GenreDto>> GetGenre(int id)
         {
-            var genreToReturn = GenreDataStore.Current.Genres.FirstOrDefault(c => c.GenreId == id);
+            //var genreToReturn = GenreDataStore.Current.Genres.FirstOrDefault(c => c.GenreId == id);
 
-            if (genreToReturn == null)
+            var genre = await _bookstoreRepository.GetGenreAsync(id);
+
+            if (genre == null)
             {
                 return NotFound();
             }
 
-            return Ok(genreToReturn);
+            return Ok(_mapper.Map<GenreDto>(genre)); 
  }
         [HttpPost]
 
