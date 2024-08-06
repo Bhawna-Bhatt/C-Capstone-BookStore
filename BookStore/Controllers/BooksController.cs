@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BookStore.Models;
+using BookStore.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Controllers
 {
@@ -6,18 +8,49 @@ namespace BookStore.Controllers
     [Route("/api/books")]
     public class BooksController : ControllerBase
     {
-       // [HttpGet]
+        private readonly IBookstoreRepository _bookstoreRepository;
 
-       // public JsonResult GetBooks()
+        public BooksController(IBookstoreRepository bookStoreRepository)
+        {
+            _bookstoreRepository = bookStoreRepository ?? throw new ArgumentNullException(nameof(bookStoreRepository));
+        }
+
+         [HttpGet]
+
+        public async Task<ActionResult<IEnumerable<BookDto>>> GetBooks()
+        {
+
+            //var genres = GenreDataStore.Current.Genres;
+            var bookEntities = await _bookstoreRepository.GetBooksAsync();
+
+            var results = new List<BookDto>();
+            foreach (var book in bookEntities)
+            {
+                results.Add(new BookDto
+                {
+                   BookId = book.BookId,
+                    Title = book.Title,
+                    Price = book.Price,
+                    AuthorId = book.AuthorId,
+                    GenreId= book.GenreId,
+                    PublicationDate= book.PublicationDate 
+                });
+            }
+
+
+            return Ok(results);
+        }
+
+        // public JsonResult GetBooks()
         //{
 
-//        }
+        //        }
 
 
-      ///  [HttpGet("/")]
-       // [HttpPost]
-       // [HttpPut]
-       // [HttpDelete]
+        ///  [HttpGet("/")]
+        // [HttpPost]
+        // [HttpPut]
+        // [HttpDelete]
     }
 }
 

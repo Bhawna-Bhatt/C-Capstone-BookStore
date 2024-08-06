@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BookStore.Models;
+using BookStore.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Controllers
@@ -7,7 +9,37 @@ namespace BookStore.Controllers
     [ApiController]
     public class AuthorsController : ControllerBase
     {
-        //[HttpGet]
+
+        private readonly IBookstoreRepository _bookstoreRepository;
+        public AuthorsController(IBookstoreRepository bookStoreRepository)
+        {
+            _bookstoreRepository = bookStoreRepository ?? throw new ArgumentNullException(nameof(bookStoreRepository));
+        }
+
+        [HttpGet]
+
+        public async Task<ActionResult<IEnumerable<AuthorDto>>> GetAuthors()
+        {
+
+            //var genres = GenreDataStore.Current.Genres;
+            var authorEntities = await _bookstoreRepository.GetAuthorsAsync();
+
+            var results = new List<AuthorDto>();
+            foreach (var author in authorEntities)
+            {
+                results.Add(new AuthorDto
+                {
+                   AuthorId = author.AuthorId,
+                   Name = author.Name,
+                   Biography = author.Biography
+
+                });
+            }
+
+
+            return Ok(results);
+        }
+
 
 
         // [HttpGet("/")]

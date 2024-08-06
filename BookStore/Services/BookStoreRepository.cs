@@ -62,9 +62,9 @@ namespace BookStore.Services
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Author>> GetAuthorsAsync()
+        public async Task<IEnumerable<Author>> GetAuthorsAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Authors.OrderBy(b => b.Name).ToListAsync();
         }
 
         public async Task<Book?> GetBookAsync(int bookId)
