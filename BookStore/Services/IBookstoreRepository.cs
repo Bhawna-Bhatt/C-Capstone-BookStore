@@ -33,7 +33,7 @@ namespace BookStore.Services
         Task<bool> GenreExistsAsync(int genreId);
 
         Task<Genre?> GetGenreForBookAsync(int bookId, int genreId);
-        Task AddGenre();
+        Task AddGenre(Genre genre);
 
         Task UpdateGenre(Genre genre);
 

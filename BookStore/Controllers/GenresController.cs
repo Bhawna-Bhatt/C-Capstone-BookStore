@@ -23,9 +23,10 @@ namespace BookStore.Controllers
 
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
-   
-      
-            [HttpGet]
+
+        //   GET /genres : Retrieve a list of all genres
+
+        [HttpGet]
 
             public async Task<ActionResult<IEnumerable<GenreDto>>> GetGenres()
             {
@@ -36,6 +37,8 @@ namespace BookStore.Controllers
 
             return Ok(_mapper.Map<IEnumerable<GenreDto>>(genreEntities));
             }
+
+          //  GET /genres/{genre_id} : Retrieve details of a specific genre 
 
 
         [HttpGet("{id}", Name ="GetGenre")]
@@ -51,27 +54,41 @@ namespace BookStore.Controllers
                 return NotFound();
             }
 
-            return Ok(_mapper.Map<GenreDto>(genre)); 
- }
+            return Ok(_mapper.Map<GenreDto>(genre));
+
+
+
+        }
+       
+        //    * POST /genres : Add a new genre
+
         [HttpPost]
 
-        public ActionResult<GenreDto> CreateGenre(GenreForCreationDto genre) 
+        public async Task<ActionResult<GenreDto>> CreateGenre(GenreForCreationDto genre) 
         {
-            var genreId = GenreDataStore.Current.Genres.Count() + 1;
+            //var genreId = GenreDataStore.Current.Genres.Count() + 1;
 
-            var finalGenre = new GenreDto()
-            {
-                GenreId = genreId,
-                GenreName = genre.GenreName
-            };
+            // var finalGenre = new GenreDto()
+            //{
+            //   GenreId = genreId,
+            //   GenreName = genre.GenreName
+            //};
 
-            GenreDataStore.Current.Genres.Add(finalGenre);
+            var finalGenre = _mapper.Map<Entities.Genre>(genre);
+
+            await _bookstoreRepository.AddGenre(finalGenre);
+
+            //GenreDataStore.Current.Genres.Add(finalGenre);
+
+            await _bookstoreRepository.SaveChangesAsync();
+
+            var createdGenreToReturn = _mapper.Map<Models.GenreDto>(finalGenre);
 
             return CreatedAtRoute("GetGenre",
                 new
                 {
-                    id = genreId
-                },finalGenre);
+                   id = createdGenreToReturn.GenreId
+                }, finalGenre);
 
             
         }

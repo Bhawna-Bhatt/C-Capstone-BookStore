@@ -6,7 +6,8 @@ namespace BookStore.Profiles
     {
         public GenreProfile() {
 
-            CreateMap<Entities.Genre, Models.GenreDto>(); 
+            CreateMap<Entities.Genre, Models.GenreDto>();
+            CreateMap<Models.GenreForCreationDto, Entities.Genre>();
         }
     }
 }

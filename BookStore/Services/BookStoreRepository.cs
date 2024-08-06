@@ -22,9 +22,9 @@ namespace BookStore.Services
             throw new NotImplementedException();
         }
 
-        public Task AddGenre()
+        public async Task AddGenre(Genre genre)
         {
-            throw new NotImplementedException();
+             _context.Genres.Add(genre);
         }
 
         public Task<bool> AuthorExistsAsync(int authorId)
@@ -95,9 +95,9 @@ namespace BookStore.Services
             return await _context.Genres.OrderBy(g => g.GenreName).ToListAsync();
         }
 
-        public Task<bool> SaveChangesAsync()
+        public async Task<bool> SaveChangesAsync()
         {
-            throw new NotImplementedException();
+            return (await _context.SaveChangesAsync() >= 0);
         }
 
         public Task UpdateAuthor(Author author)
