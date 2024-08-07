@@ -54,8 +54,7 @@ namespace BookStore.Controllers
 
         public async Task<ActionResult<GenreDto>> GetBook(int id)
         {
-            //var genreToReturn = GenreDataStore.Current.Genres.FirstOrDefault(c => c.GenreId == id);
-
+            
             var book = await _bookstoreRepository.GetBookAsync(id);
 
             if (book == null)
@@ -67,9 +66,67 @@ namespace BookStore.Controllers
         }
 
 
-        // [HttpPost]
-        // [HttpPut]
-        // [HttpDelete]
+        [HttpPost]
+
+        public async Task<ActionResult<BookDto>> CreateBook(BookForCreationDto book)
+        {
+            
+
+            var finalBook = _mapper.Map<Entities.Book>(book);
+
+            await _bookstoreRepository.AddBook(finalBook);
+
+            
+
+            await _bookstoreRepository.SaveChangesAsync();
+
+            var createdBookToReturn = _mapper.Map<Models.BookDto>(finalBook);
+
+            return CreatedAtRoute("GetBook",
+                new
+                {
+                    id = createdBookToReturn.BookId
+                }, finalBook);
+
+
+        }
+        [HttpPut("{bookId}")]
+
+        public async Task<ActionResult> UpdateBook(int bookId, BookForUpdateDto book)
+        {
+
+            var bookEntity = await _bookstoreRepository.GetBookAsync(bookId);
+
+            if (bookEntity == null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(book, bookEntity);
+            await _bookstoreRepository.SaveChangesAsync();
+
+
+            return NoContent();
+
+        }
+
+        [HttpDelete("{bookId}")]
+
+        public async Task<ActionResult> DeleteBook(int bookId)
+
+        {
+            var bookFromDatabase = await _bookstoreRepository.GetBookAsync(bookId);
+            if (bookFromDatabase == null)
+            {
+                return NotFound();
+            }
+
+            //GenreDataStore.Current.Genres.Remove(genreFromDatabase);
+            _bookstoreRepository.DeleteBook(bookFromDatabase);
+            await _bookstoreRepository.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }
 

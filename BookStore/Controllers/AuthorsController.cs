@@ -38,8 +38,7 @@ namespace BookStore.Controllers
 
         public async Task<ActionResult<AuthorDto>> GetAuthor(int id)
         {
-            //var genreToReturn = GenreDataStore.Current.Genres.FirstOrDefault(c => c.GenreId == id);
-
+            
             var author = await _bookstoreRepository.GetAuthorAsync(id);
 
             if (author == null)
@@ -49,9 +48,65 @@ namespace BookStore.Controllers
 
             return Ok(_mapper.Map<AuthorDto>(author));
         }
-        //[HttpPost]
-        //[HttpPut]
-        //[HttpDelete]
+        [HttpPost]
+
+        public async Task<ActionResult<AuthorDto>> CreateAuthor(AuthorForCreationDto author)
+        {
+           
+
+            var finalAuthor = _mapper.Map<Entities.Author>(author);
+
+            await _bookstoreRepository.AddAuthor(finalAuthor);
+
+            await _bookstoreRepository.SaveChangesAsync();
+
+            var createdAuthorToReturn = _mapper.Map<Models.AuthorDto>(finalAuthor);
+
+            return CreatedAtRoute("GetAuthor",
+                new
+                {
+                    id = createdAuthorToReturn.AuthorId
+                }, finalAuthor);
+
+
+        }
+        [HttpPut("{authorId}")]
+
+        public async Task<ActionResult> UpdateAuthor(int authorId, AuthorForUpdateDto author)
+        {
+
+            var authorEntity = await _bookstoreRepository.GetAuthorAsync(authorId);
+
+            if (authorEntity == null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(author, authorEntity);
+            await _bookstoreRepository.SaveChangesAsync();
+
+
+            return NoContent();
+
+        }
+
+        [HttpDelete("{authorId}")]
+
+        public async Task<ActionResult> DeleteAuthor(int authorId)
+
+        {
+            var authorFromDatabase = await _bookstoreRepository.GetAuthorAsync(authorId);
+            if (authorFromDatabase == null)
+            {
+                return NotFound();
+            }
+
+            //GenreDataStore.Current.Genres.Remove(genreFromDatabase);
+            _bookstoreRepository.DeleteAuthor(authorFromDatabase);
+            await _bookstoreRepository.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }
 

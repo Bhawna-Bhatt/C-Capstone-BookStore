@@ -12,44 +12,49 @@ namespace BookStore.Services
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
-        public Task AddAuthor()
+        public async Task AddAuthor(Author author)
         {
-            throw new NotImplementedException();
+            await _context.Authors.AddAsync(author);
         }
 
-        public Task AddBook()
+        public async Task AddBook(Book book)
         {
-            throw new NotImplementedException();
+           await _context.Books.AddAsync(book);
         }
 
         public async Task AddGenre(Genre genre)
         {
-             _context.Genres.Add(genre);
+            await _context.Genres.AddAsync(genre);
         }
 
-        public Task<bool> AuthorExistsAsync(int authorId)
+        public async Task<bool> AuthorExistsAsync(int authorId)
         {
-            throw new NotImplementedException();
+            return await _context.Authors.AnyAsync(c=> c.AuthorId==authorId);
         }
 
-        public Task<bool> BookExistsAsync(int bookId)
+        public async Task<bool> BookExistsAsync(int bookId)
         {
-            throw new NotImplementedException();
+            return await (_context.Books.AnyAsync(c=> c.BookId==bookId));
         }
 
-        public void DeleteAuthor(int authorId)
+        public void DeleteAuthor(Author author)
         {
-            throw new NotImplementedException();
+            _context.Authors.Remove(author);
         }
 
-        public void DeleteBook(int bookId)
+        public void DeleteBook(Book book)
         {
-            throw new NotImplementedException();
+            _context.Books.Remove(book);
         }
 
-        public Task<bool> GenreExistsAsync(int genreId)
+        public void DeleteGenre(Genre genre)
         {
-            throw new NotImplementedException();
+            _context.Genres.Remove(genre);
+        }
+
+        public async Task<bool> GenreExistsAsync(int genreId)
+        {
+           return await _context.Genres.AnyAsync(c=>c.GenreId==genreId);
         }
 
         public async Task<Author?> GetAuthorAsync(int authorId)

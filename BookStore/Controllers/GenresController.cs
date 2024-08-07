@@ -95,17 +95,19 @@ namespace BookStore.Controllers
 
         [HttpPut("{genreId}")]
 
-        public ActionResult UpdateGenre(int genreId, GenreForUpdateDto genre)
+        public async Task<ActionResult> UpdateGenre(int genreId, GenreForUpdateDto genre)
         {
-            var genreFromDatabase = GenreDataStore.Current.Genres
-                    .FirstOrDefault(c=>c.GenreId == genreId);
-            if(genreFromDatabase == null)
+
+            var genreEntity = await _bookstoreRepository.GetGenreAsync(genreId);
+
+            if (genreEntity == null)
             {
                 return NotFound();
             }
 
-            genreFromDatabase.GenreId = genreId;
-            genreFromDatabase.GenreName = genre.GenreName;
+            _mapper.Map(genre,genreEntity);
+            await _bookstoreRepository.SaveChangesAsync();
+
 
             return NoContent();
 
@@ -113,17 +115,19 @@ namespace BookStore.Controllers
 
         [HttpDelete("{genreId}")]
 
-        public ActionResult DeleteGenre(int genreId)
+        public async Task<ActionResult> DeleteGenre(int genreId)
 
         {
-            var genreFromDatabase = GenreDataStore.Current.Genres
-                   .FirstOrDefault(c => c.GenreId == genreId);
+            var genreFromDatabase = await _bookstoreRepository.GetGenreAsync(genreId);
             if (genreFromDatabase == null)
             {
                 return NotFound();
             }
 
-            GenreDataStore.Current.Genres.Remove(genreFromDatabase);
+            //GenreDataStore.Current.Genres.Remove(genreFromDatabase);
+            _bookstoreRepository.DeleteGenre(genreFromDatabase);
+            await _bookstoreRepository.SaveChangesAsync();
+            
             return NoContent();
         }
 

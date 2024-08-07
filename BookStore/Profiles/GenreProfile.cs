@@ -8,6 +8,7 @@ namespace BookStore.Profiles
 
             CreateMap<Entities.Genre, Models.GenreDto>();
             CreateMap<Models.GenreForCreationDto, Entities.Genre>();
+            CreateMap<Models.GenreForUpdateDto, Entities.Genre>();
         }
     }
 }

@@ -9,21 +9,21 @@ namespace BookStore.Services
 
         Task<Book?> GetBookAsync(int bookId);
         Task<bool> BookExistsAsync(int bookId);
-        Task AddBook();
+        Task AddBook(Book book);
 
         Task UpdateBook(Book book);
 
-        void DeleteBook(int bookId);
+        void DeleteBook(Book book);
 
         //Authors
         Task<IEnumerable<Author>> GetAuthorsAsync();//
         Task<Author?> GetAuthorAsync(int authorId);
 
         Task<bool> AuthorExistsAsync(int authorId);
-        Task AddAuthor();
+        Task AddAuthor(Author author);
 
         Task UpdateAuthor(Author author);
-        void DeleteAuthor(int authorId);
+        void DeleteAuthor(Author author);
 
         Task<Author?> GetAuthorForBookAsync(int bookId, int authorId);
         //Genres
@@ -36,6 +36,8 @@ namespace BookStore.Services
         Task AddGenre(Genre genre);
 
         Task UpdateGenre(Genre genre);
+
+        void DeleteGenre(Genre genre);
 
         Task<bool> SaveChangesAsync();
     }

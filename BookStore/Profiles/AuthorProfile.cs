@@ -7,8 +7,10 @@ namespace BookStore.Profiles
         public AuthorProfile() {
            
 
-                CreateMap<Entities.Author, Models.AuthorDto>();
-            
+            CreateMap<Entities.Author, Models.AuthorDto>();
+            CreateMap<Models.AuthorForCreationDto, Entities.Author>();
+            CreateMap<Models.AuthorForUpdateDto, Entities.Author>();
+
         }
     }
 }
