@@ -5,7 +5,10 @@ namespace BookStore.Services
     public interface IBookstoreRepository
     {
         // Books
-        Task<IEnumerable<Book>> GetBooksAsync();//
+        Task<IEnumerable<Book>> GetBooksAsync();
+
+        Task<IEnumerable<Book>> GetBooksAsync(string? title,string? searchQuery);
+
 
         Task<Book?> GetBookAsync(int bookId);
         Task<bool> BookExistsAsync(int bookId);
@@ -16,7 +19,10 @@ namespace BookStore.Services
         void DeleteBook(Book book);
 
         //Authors
-        Task<IEnumerable<Author>> GetAuthorsAsync();//
+        Task<IEnumerable<Author>> GetAuthorsAsync();
+        
+        
+        Task<IEnumerable<Author>> GetAuthorsAsync(string? name,string? searchQuery);
         Task<Author?> GetAuthorAsync(int authorId);
 
         Task<bool> AuthorExistsAsync(int authorId);
@@ -27,8 +33,12 @@ namespace BookStore.Services
 
         Task<Author?> GetAuthorForBookAsync(int bookId, int authorId);
         //Genres
-        Task<IEnumerable<Genre>> GetGenresAsync(); //
-        Task<Genre> GetGenreAsync(int genreId);
+        Task<IEnumerable<Genre>> GetGenresAsync();
+
+        Task<IEnumerable<Genre>> GetGenresAsync(string? genrename,string? searchQuery);
+        Task<Genre?> GetGenreAsync(int genreId);
+
+
 
         Task<bool> GenreExistsAsync(int genreId);
 

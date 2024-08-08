@@ -20,11 +20,12 @@ namespace BookStore.Controllers
 
         [HttpGet]
 
-        public async Task<ActionResult<IEnumerable<BookDto>>> GetBooks()
+        public async Task<ActionResult<IEnumerable<BookDto>>> GetBooks(
+            string? title,string? searchQuery)
         {
 
             //var genres = GenreDataStore.Current.Genres;
-            var bookEntities = await _bookstoreRepository.GetBooksAsync();
+            var bookEntities = await _bookstoreRepository.GetBooksAsync(title,searchQuery);
 
             // var results = new List<BookDto>();
             //foreach (var book in bookEntities)

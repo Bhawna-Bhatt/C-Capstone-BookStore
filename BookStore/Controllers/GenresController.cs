@@ -28,11 +28,12 @@ namespace BookStore.Controllers
 
         [HttpGet]
 
-            public async Task<ActionResult<IEnumerable<GenreDto>>> GetGenres()
+            public async Task<ActionResult<IEnumerable<GenreDto>>> GetGenres(
+            [FromQuery] string? genrename,string? searchQuery)
             {
 
             //var genres = GenreDataStore.Current.Genres;
-            var genreEntities = await _bookstoreRepository.GetGenresAsync();
+            var genreEntities = await _bookstoreRepository.GetGenresAsync(genrename,searchQuery);
 
 
             return Ok(_mapper.Map<IEnumerable<GenreDto>>(genreEntities));
