@@ -21,7 +21,18 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+//cors
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        builder =>
+        {
+            builder.AllowAnyOrigin()  // Allow any origin
+                   .AllowAnyHeader()  // Allow any header
+                   .AllowAnyMethod(); // Allow any HTTP method
+        });
+    });
 // for dbcontext
 
 builder.Services.AddDbContext<BookStoreContext>(dbContextOptions
@@ -44,6 +55,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("AllowAllOrigins");
 
 app.UseAuthorization();
 
