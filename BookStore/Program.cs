@@ -45,6 +45,16 @@ builder.Services.AddScoped<IBookstoreRepository, BookStoreRepository>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+builder.Services.AddApiVersioning(setupAction =>
+{
+    setupAction.ReportApiVersions = true;
+    setupAction.AssumeDefaultVersionWhenUnspecified = true;
+    setupAction.DefaultApiVersion = new Asp.Versioning.ApiVersion(1, 0);
+
+}).AddMvc();
+
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
